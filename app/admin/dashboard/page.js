@@ -11,10 +11,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { User, Phone, ShieldCheck } from "lucide-react";
-import interceptor from "@/app/utils/interceptor"
+import interceptor from "@/app/utils/admin.interceptor"
+import { set } from "date-fns";
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
+  const [totalusers, setTotalUsers] = useState("");
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
 
@@ -23,7 +25,8 @@ export default function AdminDashboard() {
     const fetchUsers = async () => {
       try {
         const res = await interceptor.get("/admin/dashusers");
-        setUsers(res.data);
+        setUsers(res.data.users);
+        setTotalUsers(res.data.totalusers);
       } catch (err) {
         console.error("Failed to load users", err);
       }
@@ -41,6 +44,8 @@ export default function AdminDashboard() {
 
   return (
     <div className="h-screen flex flex-col">
+      <h1 className="mt-5 ">Total users : {totalusers}</h1>
+
       <div className="p-4 bg-white border-b sticky top-0 z-10">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <Select

@@ -35,8 +35,11 @@ export default function SignupPage() {
         );
         setReferralData(res.data.referral_data);
       } catch (err) {
+        
+        
+        console.log(err)
         toast.error("Invalid referral link. Redirecting to home...");
-        setTimeout(() => router.push("/"), 4000);
+        // setTimeout(() => router.push("/"), 4000);
       }
     };
 

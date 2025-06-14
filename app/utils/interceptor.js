@@ -47,15 +47,20 @@ interceptor.interceptors.request.use(
 interceptor.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 403) {
+    try{
+    if (error.response && error.response.status === 401) {
       console.error("Unauthorized access. Token might be invalid or expired.");
-      localStorage.removeItem();
+      localStorage.removeItem("happymom_acc_token");
       // You may want to use Next.js router here if inside a React component
       window.location.href = "/login";
     }
     console.error("Axios response error:", error);
     return Promise.reject(error);
+  }catch(err){
+    console.error("Axios response error:", err);
+    return Promise.reject(err);
   }
+}
 );
 
 export default interceptor;

@@ -357,6 +357,7 @@ export default function WalletPage() {
     async function fetchWallet() {
       try {
         const res = await interceptor.get("/wallet/getwallet");
+        console.log(res.data, "data");
         setWallet(res.data);
       } catch (err) {
         toast("Failed to fetch wallet balance");
@@ -372,6 +373,8 @@ export default function WalletPage() {
       const res = await interceptor.get(
         `/wallet/getincentives?page=${pageNum}&limit=10`
       );
+      console.log(res.data, "data");
+
       const data = res.data.incentives || [];
       setIncentives((prev) =>
         pageNum === 1
@@ -475,7 +478,7 @@ export default function WalletPage() {
               Withdrawable Balance
             </p>
             <p className="text-white text-lg font-semibold">
-              ₹{wallet.wallet_balance?.toLocaleString("en-IN") ?? "0.00"}
+              ₹{wallet.withdrawable_amount?.toLocaleString("en-IN") ?? "0.00"}
             </p>
           </div>
         </div>
@@ -488,7 +491,7 @@ export default function WalletPage() {
           <div className="h-72 overflow-y-auto">
             {incentives.length === 0 && !loading && (
               <div className="text-center text-[#ababab] py-6">
-                No incentives found.
+            Incentives not found.
               </div>
             )}
             {incentives.map((inc, idx) => {
@@ -499,14 +502,21 @@ export default function WalletPage() {
                   ref={isLast ? lastIncentiveRef : null}
                   className="flex items-center gap-4 px-4 min-h-[72px] py-2 justify-between hover:bg-[#1f1f1f] text-white text-sm"
                 >
-                  <div className="flex flex-col justify-center">
+                  <div className="flex  justify-center">
+                    <span>
                     <p className="font-medium">
                       {inc.description ||
                         inc.type ||
-                        (inc.user?.full_name ? `PM.${inc.user.full_name}` : "")}
+                        (inc.user?.full_name ? `${inc.user.full_name}` : "")}
                     </p>
+                    
                     <p className="text-[#ababab] text-xs">
                       {inc.date ? inc.date.slice(0, 10) : ""}
+                    </p>
+                    </span>
+                    
+<p className={`text-xs  ${inc.user.status === "active" ? " text-green-400" : " text-red-400"}  rounded-full px-3  h-fit whitespace-nowrap`}>
+                      {inc.user.status ? inc.user.status[0].toUpperCase() + inc.user.status?.slice(1) : ""}
                     </p>
                   </div>
                   <div className="shrink-0">₹{inc.amount}</div>

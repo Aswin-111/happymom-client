@@ -3,8 +3,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import interceptor from "@/app/utils/interceptor.js";
 import { useRouter } from "next/navigation";
-import { IoWallet } from "react-icons/io5";
-import { RiCoinsFill, RiLockPasswordFill } from "react-icons/ri";
+
+
 
 export default function Dashboard() {
   const [userData, setUserData] = useState(null);
@@ -30,6 +30,7 @@ export default function Dashboard() {
     try {
       const res = await interceptor.get("/user/dashboard/user");
       setUserData(res.data);
+      console.log(res.data);
     } catch (err) {
       console.error("Failed to fetch user data", err);
     }
@@ -43,7 +44,7 @@ export default function Dashboard() {
         `/user/dashboard/referrals?page=${pageNum}&limit=10`
       );
       const data = res.data.referrals || [];
-
+      console.log(data, 'data')
       if (data.length > 0) {
         if (pageNum === 1) {
           setReferrals(data);
@@ -103,21 +104,44 @@ export default function Dashboard() {
       </div>
 
       {/* Profile Card */}
-      <div className="p-4">
+      {/* <div className="p-4">
         <div className="flex items-stretch justify-between gap-4 rounded-xl bg-[#212121] p-4 shadow">
           <div className="flex flex-col gap-1 flex-[2_2_0px]">
             <p className="text-white text-base font-bold">
-              {userData.full_name}
+              {userData.name}
             </p>
             <p className="text-[#ababab] text-sm">
               {userData.phone} | {userData.designation}
             </p>
           </div>
         </div>
+      </div> */}
+
+    
+    <div className="p-4">
+      <div className="flex items-center justify-between gap-4 rounded-lg bg-[#212121] p-4 shadow">
+        {/* Left side: Name and Phone */}
+        <div className="flex flex-col gap-1">
+          <p className="text-white text-base font-bold">{userData.name}</p>
+          <p className="text-[#ababab] text-sm">{userData.phone}</p>
+        </div>
+
+        {/* Right side: Role and Status */}
+        <div className="flex flex-col items-end gap-1">
+          <span className="px-2 py-1 text-xs font-medium  text-white ">
+            {userData.designation}
+          </span>
+          <span className="text-xs text-green-400 bg-green-900/30 rounded-lg px-3 py-1 h-fit whitespace-nowrap">
+           {userData.status?.slice(0, 1)?.toUpperCase() + userData.status?.slice(1)}
+          </span>
+        </div>
       </div>
+    </div>
+ 
+
 
       {/* Action Buttons */}
-      <div className="flex justify-stretch">
+      {/* <div className="flex justify-stretch">
         <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-between">
           <button className="rounded-full h-10 px-4 bg-[#303030] text-white text-sm font-bold">
             Password Reset
@@ -131,10 +155,10 @@ export default function Dashboard() {
             Wallet
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Referrals Section */}
-      <h2 className="text-white text-[22px] font-bold px-4 pb-3 pt-2">
+      <h2 className="text-white text-[22px] font-bold px-4 pb-3 pt-2 mt-7">
         Your Referrals
       </h2>
 
@@ -147,22 +171,40 @@ export default function Dashboard() {
           referrals.map((ref, idx) => {
             const isLast = referrals.length === idx + 1;
             return (
-              <div className="p-2" key={`${ref._id}-${idx}`}>
+              <div className="p-2 " key={`${ref._id}-${idx}`}>
                 <div
                   ref={isLast ? lastReferralRef : null}
                   onClick={() => handleCardClick(ref._id)}
-                  className="flex items-stretch justify-between gap-4 rounded-xl bg-[#212121] p-4 shadow cursor-pointer hover:bg-[#2a2a2a] transition-colors"
+                  className="flex items-stretch justify-between gap-4 rounded-xl bg-[#212121]  p-4 shadow cursor-pointer hover:bg-[#2a2a2a] transition-colors"
                 >
-                  <div className="flex flex-col gap-1 flex-[2_2_0px]">
+                  {/* <div className="flex flex-col gap-1 flex-[2_2_0px] ">
                     <p className="text-white text-base font-bold leading-tight">
                       {ref.full_name}
                     </p>
                     <p className="text-[#ababab] text-sm">
-                      {ref.phone} | {ref.email || "N/A"}
+                      {ref.phone} 
                     </p>
-                  </div>
+                  <p className="text-[#ababab] text-sm">
+                      {ref.email || "N/A"}
+                    </p>
+                  </div> */}
+               
+   
+      <div className="flex flex-col gap-1 flex-[2_2_0px]">
+        <p className="text-white text-base font-bold leading-tight">
+          {ref.full_name}
+        </p>
+        <p className="text-[#ababab] text-sm"> {ref.phone} </p>
+        <p className="text-[#ababab] text-sm">  {ref.email || "N/A"}</p>
+      </div>
+      <span className={`text-xs  ${ref.status === "active" ? "bg-green-900/30 text-green-400" : "bg-red-900/30 text-red-400"}  rounded-full px-3 py-1 h-fit whitespace-nowrap`}>
+      {ref.status?.slice(0, 1)?.toUpperCase() + ref.status?.slice(1)}
+      </span>
+    </div>
+ 
+
                 </div>
-              </div>
+             
             );
           })
         )}

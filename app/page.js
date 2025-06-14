@@ -74,7 +74,7 @@ export default function Home() {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center gap-8">
-            <nav className="flex items-center gap-6">
+            {/* <nav className="flex items-center gap-6">
               {[
                 "For Parents",
                 "For Kids",
@@ -89,14 +89,22 @@ export default function Home() {
                   {label}
                 </a>
               ))}
-            </nav>
+            </nav> */}
+            <button
+              className="h-10 min-w-[84px] rounded-full bg-[#e7eff3] px-4 text-sm font-bold text-[#0e171b]"
+              onClick={() => {
+                router.push("/admin/login");
+              }}
+            >
+              Admin Log In
+            </button>
             <button
               className="h-10 min-w-[84px] rounded-full bg-[#e7eff3] px-4 text-sm font-bold text-[#0e171b]"
               onClick={() => {
                 router.push("/login");
               }}
             >
-              Log In
+              User Log In
             </button>
           </div>
         </div>
@@ -104,7 +112,7 @@ export default function Home() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="mt-4 flex flex-col gap-4 md:hidden">
-            {["For Parents", "For Kids", "For Educators", "For Therapists"].map(
+            {/* {["For Parents", "For Kids", "For Educators", "For Therapists"].map(
               (label) => (
                 <a
                   key={label}
@@ -114,14 +122,23 @@ export default function Home() {
                   {label}
                 </a>
               )
-            )}
+            )} */}
+            
             <button
               className="w-full h-10 rounded-full bg-[#e7eff3] px-4 text-sm font-bold text-[#0e171b]"
               onClick={() => {
                 router.push("/login");
               }}
             >
-              Log In
+              Admin Log In
+            </button>
+             <button
+              className="w-full h-10 rounded-full bg-[#e7eff3] px-4 text-sm font-bold text-[#0e171b]"
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              User Log In
             </button>
           </div>
         )}
@@ -178,7 +195,7 @@ export default function Home() {
             )
           )}
         </div>
-        <p className="text-sm">@2024 Happymom. All rights reserved.</p>
+        <p className="text-sm">@2025 Happymom. All rights reserved.</p>
       </footer>
     </div>
   );

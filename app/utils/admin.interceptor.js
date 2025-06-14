@@ -8,7 +8,7 @@ interceptor.interceptors.request.use(
   (config) => {
     const token =
       typeof window !== "undefined" &&
-      localStorage.getItem("happymom_acc_token");
+      localStorage.getItem("happymom_admin_acc_token");
     if (token && config.url !== "/admin/login") {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -20,7 +20,12 @@ interceptor.interceptors.request.use(
 interceptor.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Optional: handle global error logic like token expiry
+    if (error.response && error.response.status === 401) {
+      console.error("Unauthorized access. Token might be invalid or expired.");
+      localStorage.removeItem("happymom_admin_acc_token");
+      // You may want to use Next.js router here if inside a React component
+      window.location.href = "/admin/login";
+    }
     return Promise.reject(error);
   }
 );

@@ -5,7 +5,7 @@ import "./globals.css";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { FaBook, FaDownload } from "react-icons/fa";
-import { Bell, Users, LogOut } from "lucide-react";
+import { Bell, Users, LogOut, UserCog, User } from "lucide-react";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -22,12 +22,14 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
 
   const hideBottomNav = ["/", "/login", "/signup", "/admin"].includes(pathname);
-  const hideSideBar = ["/login", "/signup", "/user"].includes(pathname);
+  const hideSideBar = ["/login", "/signup", "/user", "/admin/login"].includes(pathname);
   const isAdmin = pathname.includes("/admin");
+  console.log(hideSideBar, "hideSideBar");
   function Sidebar({ children }) {
     const items = [
       { label: "Users", icon: <Users />, href: "/admin/dashboard" },
       { label: "Auth", icon: <LogOut />, href: "/admin/auth" },
+      { label: "Admins", icon: <UserCog />, href: "/admin/admins" },
       { label: "Notifications", icon: <Bell />, href: "/admin/notifications" },
       { label: "Courses", icon: <FaBook />, href: "/admin/courses" },
       { label: "Export", icon: <FaDownload />, href: "/admin/export" },
@@ -46,6 +48,7 @@ export default function RootLayout({ children }) {
               {item.icon} <span>{item.label}</span>
             </Link>
           ))}
+          <span className="absolute bottom-25 flex justify-center items-center w-50 h-1 text-white px-10 py-5 cursor-pointer bg-black rounded-xl opacity-70" onClick = {() => {localStorage.removeItem("happymom_admin_acc_token"); window.location.href = "/admin/login"}}>Logout</span>
         </aside>
         <main className="flex-1 p-6 overflow-y-auto">{children}</main>
       </div>
@@ -57,7 +60,8 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {isAdmin ? (
-          <Sidebar>{children}</Sidebar>
+          (hideSideBar ? children : <Sidebar>{children}</Sidebar>)
+        
         ) : (
           <>
             {children}
