@@ -382,7 +382,7 @@ export default function WalletPage() {
           : [...prev, ...data.filter((i) => !prev.some((p) => p._id === i._id))]
       );
       setHasMore(res.data.hasMore);
-    } catch (err) {}
+    } catch (err) { }
     setLoading(false);
   };
 
@@ -491,38 +491,57 @@ export default function WalletPage() {
           <div className="h-72 overflow-y-auto">
             {incentives.length === 0 && !loading && (
               <div className="text-center text-[#ababab] py-6">
-            Incentives not found.
+                Incentives not found.
               </div>
             )}
             {incentives.map((inc, idx) => {
               const isLast = incentives.length === idx + 1;
+              const isCredit = inc.type === "credit"; // optional, define based on your data
               return (
                 <div
                   key={inc._id ?? idx}
                   ref={isLast ? lastIncentiveRef : null}
-                  className="flex items-center gap-4 px-4 min-h-[72px] py-2 justify-between hover:bg-[#1f1f1f] text-white text-sm"
+                  className="flex justify-between items-center gap-3 px-4 py-3 hover:bg-[#1f1f1f] border-b border-[#2a2a2a]"
                 >
-                  <div className="flex  justify-center">
-                    <span>
-                    <p className="font-medium">
-                      {inc.description ||
-                        inc.type ||
-                        (inc.user?.full_name ? `${inc.user.full_name}` : "")}
-                    </p>
-                    
-                    <p className="text-[#ababab] text-xs">
-                      {inc.date ? inc.date.slice(0, 10) : ""}
-                    </p>
-                    </span>
-                    
-<p className={`text-xs  ${inc.user.status === "active" ? " text-green-400" : " text-red-400"}  rounded-full px-3  h-fit whitespace-nowrap`}>
-                      {inc.user.status ? inc.user.status[0].toUpperCase() + inc.user.status?.slice(1) : ""}
-                    </p>
+                  {/* LEFT: ICON + DETAILS */}
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1">
+                      {/* Replace with dynamic icon based on type */}
+                      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#2a2a2a] text-white">
+                        +
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-sm font-semibold text-white leading-tight">
+                        {inc.description || inc.type || inc.user?.full_name || "Incentive"}
+                      </p>
+                      <p className="text-xs text-[#ababab]">
+                        {inc.date?.slice(0, 10) || "Date Unknown"}
+                      </p>
+                      {inc.user?.status && (
+                        <span
+                          className={`text-xs mt-1 px-2 py-0.5 rounded-full w-fit ${inc.user.status === "active"
+                            ? "bg-green-900/30 text-green-400"
+                            : "bg-red-900/30 text-red-400"
+                            }`}
+                        >
+                          {inc.user.status[0].toUpperCase() + inc.user.status.slice(1)}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="shrink-0">₹{inc.amount}</div>
+
+                  {/* RIGHT: AMOUNT */}
+                  <div
+                    className={`text-sm font-semibold ${inc.user.status === "active" ? "text-green-400" : "text-red-400"
+                      }`}
+                  >
+                    ₹{inc.amount?.toLocaleString("en-IN") ?? "0.00"}
+                  </div>
                 </div>
               );
             })}
+
             {loading && (
               <div className="text-center text-[#ababab] py-4">Loading...</div>
             )}

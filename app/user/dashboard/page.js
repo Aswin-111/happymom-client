@@ -4,6 +4,15 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import interceptor from "@/app/utils/interceptor.js";
 import { useRouter } from "next/navigation";
 
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 
 export default function Dashboard() {
@@ -117,45 +126,64 @@ export default function Dashboard() {
         </div>
       </div> */}
 
-    
-    <div className="p-4">
-      <div className="flex items-center justify-between gap-4 rounded-lg bg-[#212121] p-4 shadow">
-        {/* Left side: Name and Phone */}
-        <div className="flex flex-col gap-1">
-          <p className="text-white text-base font-bold">{userData.name}</p>
-          <p className="text-[#ababab] text-sm">{userData.phone}</p>
-        </div>
 
-        {/* Right side: Role and Status */}
-        <div className="flex flex-col items-end gap-1">
-          <span className="px-2 py-1 text-xs font-medium  text-white ">
-            {userData.designation}
-          </span>
-          <span className="text-xs text-green-400 bg-green-900/30 rounded-lg px-3 py-1 h-fit whitespace-nowrap">
-           {userData.status?.slice(0, 1)?.toUpperCase() + userData.status?.slice(1)}
-          </span>
+      <div className="p-4">
+        <div className="flex items-center justify-between gap-4 rounded-lg bg-[#212121] p-4 shadow">
+          {/* Left side: Name and Phone */}
+          <div className="flex flex-col gap-1">
+            <p className="text-white text-base font-bold">{userData.name}</p>
+            <p className="text-[#ababab] text-sm">{userData.phone}</p>
+          </div>
+
+          {/* Right side: Role and Status */}
+          <div className="flex flex-col items-end gap-1">
+            <span className="px-2 py-1 text-xs font-medium  text-white ">
+              {userData.designation}
+            </span>
+            <span className="text-xs text-green-400 bg-green-900/30 rounded-lg px-3 py-1 h-fit whitespace-nowrap">
+              {userData.status?.slice(0, 1)?.toUpperCase() + userData.status?.slice(1)}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
- 
+
 
 
       {/* Action Buttons */}
-      {/* <div className="flex justify-stretch">
+      <div className="flex justify-stretch">
         <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-between">
-          <button className="rounded-full h-10 px-4 bg-[#303030] text-white text-sm font-bold">
-            Password Reset
-          </button>
-          {isAdmin && (
-            <button className="rounded-full h-10 px-4 bg-[#303030] text-white text-sm font-bold">
-              Incentives
-            </button>
-          )}
-          <button className="rounded-full h-10 px-4 bg-[#303030] text-white text-sm font-bold">
+          <button className="rounded-full h-10 px-4 bg-[#303030] text-white text-sm font-bold" onClick={() => router.push('/user/wallet')}>
             Wallet
           </button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="rounded-full h-10 px-4 bg-[#303030] text-white text-sm font-bold">
+                Logout
+              </button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#1a1a1a] text-white border-none">
+              <DialogHeader>
+                <DialogTitle>Confirm Logout</DialogTitle>
+              </DialogHeader>
+              <p>Are you sure you want to log out?</p>
+              <DialogFooter className="mt-4">
+                <Button variant="ghost">Cancel</Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    localStorage.removeItem("happymom_acc_token")
+                    router.push("/login");
+                  }}
+                >
+                  Logout
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
         </div>
-      </div> */}
+      </div>
 
       {/* Referrals Section */}
       <h2 className="text-white text-[22px] font-bold px-4 pb-3 pt-2 mt-7">
@@ -188,23 +216,23 @@ export default function Dashboard() {
                       {ref.email || "N/A"}
                     </p>
                   </div> */}
-               
-   
-      <div className="flex flex-col gap-1 flex-[2_2_0px]">
-        <p className="text-white text-base font-bold leading-tight">
-          {ref.full_name}
-        </p>
-        <p className="text-[#ababab] text-sm"> {ref.phone} </p>
-        <p className="text-[#ababab] text-sm">  {ref.email || "N/A"}</p>
-      </div>
-      <span className={`text-xs  ${ref.status === "active" ? "bg-green-900/30 text-green-400" : "bg-red-900/30 text-red-400"}  rounded-full px-3 py-1 h-fit whitespace-nowrap`}>
-      {ref.status?.slice(0, 1)?.toUpperCase() + ref.status?.slice(1)}
-      </span>
-    </div>
- 
 
+
+                  <div className="flex flex-col gap-1 flex-[2_2_0px]">
+                    <p className="text-white text-base font-bold leading-tight">
+                      {ref.full_name}
+                    </p>
+                    <p className="text-[#ababab] text-sm"> {ref.phone} </p>
+                    <p className="text-[#ababab] text-sm">  {ref.email || "N/A"}</p>
+                  </div>
+                  <span className={`text-xs  ${ref.status === "active" ? "bg-green-900/30 text-green-400" : "bg-red-900/30 text-red-400"}  rounded-full px-3 py-1 h-fit whitespace-nowrap`}>
+                    {ref.status?.slice(0, 1)?.toUpperCase() + ref.status?.slice(1)}
+                  </span>
                 </div>
-             
+
+
+              </div>
+
             );
           })
         )}
@@ -215,6 +243,6 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 }

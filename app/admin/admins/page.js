@@ -100,10 +100,43 @@ export default function AdminListPage() {
         {admins.map((admin) => (
           <Card key={admin._id}>
             <CardContent className="p-4 space-y-1">
-              <p className="font-medium">{admin.name}</p>
-              <p className="text-muted-foreground text-sm">{admin.phone}</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-medium">{admin.name}</p>
+                  <p className="text-muted-foreground text-sm">{admin.phone}</p>
+                </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    {admin.role === "superadmin" ? null : <Button variant="destructive" size="sm">Delete</Button>}
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Confirm Delete</DialogTitle>
+                    </DialogHeader>
+                    <p>Are you sure you want to delete this admin?</p>
+                    <DialogFooter>
+                      <Button variant="ghost">Cancel</Button>
+                      <Button
+                        variant="destructive"
+                        onClick={async () => {
+                          try {
+                            await interceptor.delete(`/admin/delete-admin/${admin._id}`);
+                            toast.success("Admin deleted successfully");
+                            fetchAdmins();
+                          } catch (err) {
+                            toast.error(err.response?.data?.message || "Failed to delete");
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </CardContent>
           </Card>
+
         ))}
       </div>
     </div>

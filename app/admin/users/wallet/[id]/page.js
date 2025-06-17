@@ -16,7 +16,7 @@ export default function WalletPage() {
     const fetchWallet = async () => {
       try {
         const res = await interceptor.get(
-          "/admin/getuserwallet?id=682228de7b8775734166f992"
+          `/admin/getuserwallet?id=${id}`
         );
         setWalletData(res.data);
       } catch (err) {
